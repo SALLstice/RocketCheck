@@ -6,7 +6,7 @@ class Handler_Class(object):
   def OnNewMailEx(self, receivedItemsIDs):
     for ID in receivedItemsIDs.split(","):
         message = mapi.Session.GetItemFromID(ID)
-        if message.UnRead:
+        if message.SenderEmailAddress == "notes@email.getrocketbook.com":
             print(f"New Message Found: {message.Subject}")
             for attachment in message.Attachments:
                 attachment.SaveAsFile(os.path.join(path, str(attachment.FileName)))
@@ -24,10 +24,7 @@ class Handler_Class(object):
 
 outlook = win32com.client.DispatchWithEvents("Outlook.Application", Handler_Class)
 mapi = outlook.GetNamespace("MAPI")
-
 path = r'L:\Rocketbook Scans'
-inbox = mapi.GetDefaultFolder(6)
-rocketbookFolder = inbox.Folders.Item("Scanned Docs").Folders.Item("Rocketbook")
 
 print("Running...")
 pythoncom.PumpMessages()
